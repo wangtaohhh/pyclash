@@ -21,6 +21,6 @@ def save_subscription(url):
 
 if __name__ == "__main__":
 
-    save_subscription('')
+    save_subscription('https://welink345.233.tw/api/v1/client/subscribe?token=84884bb5dbfdfad03e30102df39cf81f')
 
 # save_subscription()

@@ -6,6 +6,6 @@ import os
     
 yaml_file = open("subscription.yaml", "r", encoding="utf8")
 
-airport_data = yaml.load(yaml_file)
+airport_data = yaml.load(yaml_file, Loader=yaml.FullLoader)
 
 # print(airport_data)

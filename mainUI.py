@@ -4,7 +4,7 @@ import sys, os
 import yaml_analysis
 import airport_group
 import subprocess, yaml
-import extract_server_choosed, change_group_info, kill_clash
+import extract_server_choosed, change_group_info, kill_clash, save_subscription_group
 import save_subscribe
 
 
@@ -27,7 +27,12 @@ class PyClashUI(ReQMainWindow):
 
         self.choose_group = QtWidgets.QComboBox(self)
         self.choose_server = QtWidgets.QComboBox(self)
-        self.subscription_address = QtWidgets.QLineEdit(self)
+
+        self.choose_group.setCurrentIndex(0)
+        self.choose_group.setCurrentIndex(0)
+
+        #self.subscription_address = QtWidgets.QLineEdit(self)
+        self.add_subscription_button = QtWidgets.QPushButton("add subscription")
         self.upgrade_subscription = QtWidgets.QPushButton("update subscription")
         self.test_speed = QtWidgets.QPushButton("test")
         self.connect = QtWidgets.QPushButton("connect")
@@ -35,13 +40,17 @@ class PyClashUI(ReQMainWindow):
         self.layout.setSpacing(30)
         self.layout.addRow('group', self.choose_group)
         self.layout.addRow('server', self.choose_server)
-        self.layout.addRow('sub_address', self.subscription_address)
+        #self.layout.addRow('sub_address', self.subscription_address)
+        self.layout.addRow(self.add_subscription_button)
         self.layout.addRow(self.upgrade_subscription)
         self.layout.addRow(self.test_speed)
         self.layout.addRow(self.connect)
 
         # self.subscription_address.setText("paste your address here")
 
+        # add subscription button signal
+        self.add_subscription_button.clicked.connect(self.add_subscription_button_function)
+        
         self.setLayout(self.layout)
 
         self.group_list = airport_group.group_name_list
@@ -60,8 +69,14 @@ class PyClashUI(ReQMainWindow):
 
         self.choose_server.clear()
         self.choose_server.addItems(self.server_list[self.choose_group.currentIndex()])
-
         return self.choose_group.currentIndex()
+
+
+    def add_subscription_button_function(self):
+        self.add_subscription_button_window = save_subscription_group.SaveSubscribeGroup()
+        self.add_subscription_button_window.show()
+        self.add_subscription_button_window.exec_()
+        
 
     def run_clash(self):
 
@@ -73,16 +88,18 @@ class PyClashUI(ReQMainWindow):
         subprocess.Popen(["clash", "-d", "."])
         self.connect.setEnabled(False)
 
-    def generate_config(
-        self, server_list
-    ) -> dict:  # return the information dict of the server
+
+        
+    def generate_config(self, server_list) -> dict:  # return the information dict of the server
+
         self.server_used = extract_server_choosed.extract_server_info(server_list)
         self.server_group = change_group_info.change_all_proxy_groups(server_list)
-        yaml_analysis.airport_data["proxies"] == self.server_used
-        yaml_analysis.airport_data["proxy-groups"] == self.server_group
+        yaml_analysis.airport_data["proxies"] = self.server_used
+        yaml_analysis.airport_data["proxy-groups"] = self.server_group
         config_yaml = yaml.dump(yaml_analysis.airport_data, allow_unicode=True)
         with open("config.yaml", "w", encoding='utf8') as write_yaml:
             write_yaml.write(config_yaml)
+
 
     def request_subscription(self):
         save_subscribe.save_subscription(self.subscription_address.text())

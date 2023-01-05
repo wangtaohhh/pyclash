@@ -1,7 +1,6 @@
-# pyqt-clash
-A project which was wrote in lunch break....  So please DO NOT expect too much on it 
-<br>
-Can be used, cannot be used comfortably
+# pyclash
+Using clash in linux is a little difficult, so pyclash is built.
+
 
 ## how to use
 ```
