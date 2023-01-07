@@ -1,6 +1,4 @@
-import imp
 import yaml
-import os
 
 # if os.path.exists('subscription.yaml'):
     
